@@ -5,10 +5,11 @@
         public int X { get; private set; }
         public int Y { get; private set; }
 
-        private Random _random = new Random();
+        private Random _random;
 
-        public Food(Grid grid)
+        public Food(Grid grid, Random random)
         {
+            _random = random;
             Spawn(grid);
         }
 

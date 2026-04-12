@@ -3,7 +3,12 @@
     class Obstacle
     {
         private List<(int x, int y)> _obstacles = new List<(int x, int y)>();
-        private Random _random = new Random();
+        private Random _random;
+
+        public Obstacle(Random random)
+        {
+            _random = random;
+        }
         private int _ticksSinceLastSpawn = 0;
         private int _spawnInterval = 100; // Ticks between each new obstacle
 

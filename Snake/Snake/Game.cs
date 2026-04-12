@@ -2,6 +2,7 @@
 {
     class Game
     {
+        private Random _random = new Random();
         private Grid _grid;
         private Snake _snake;
         private Food _food;
@@ -13,13 +14,14 @@
 
         public Game()
         {
+            _random = new Random();
             _grid = new Grid(30, 20);
             _snake = new Snake(15, 10);
-            _food = new Food(_grid);
-            _isRunning = true;
+            _food = new Food(_grid, _random);
+            _obstacles = new Obstacle(_random);
+            _powerUp = new PowerUp(_random);
             _score = new ScoreManager();
-            _obstacles = new Obstacle();
-            _powerUp = new PowerUp();
+            _isRunning = true;
         }
 
         public void Run()
@@ -33,6 +35,8 @@
                 Render();
                 Thread.Sleep(_tickRate);
             }
+
+            GameOver();
         }
 
         private void HandleInput()
@@ -154,6 +158,27 @@
                     // Handled in Update - skip wall collision check
                     break;
             }
+        }
+
+        private void GameOver()
+        {
+            _score.SaveScore();
+            List<int> highscores = _score.LoadScores();
+
+            Console.Clear();
+            Console.WriteLine("== GAME OVER ==");
+            Console.WriteLine($"Your score: {_score.Score}");
+            Console.WriteLine();
+            Console.WriteLine("== HIGHSCORES ==");
+
+            for (int i = 0; i < highscores.Count; i++)
+            {
+                Console.WriteLine($"{i + 1}. {highscores[i]}");
+            }
+
+            Console.WriteLine();
+            Console.WriteLine("Press any key to exit...");
+            Console.ReadKey();
         }
     }
 }

@@ -14,7 +14,12 @@
         public PowerUpType Type { get; private set; }
         public bool IsActive { get; private set; }
 
-        private Random _random = new Random();
+        private Random _random;
+
+        public PowerUp(Random random)
+        {
+            _random = random;
+        }
         private int _ticksSinceLastSpawn = 0;
         private int _spawnInterval = 150;
         private int _effectTicksRemaining = 0;
