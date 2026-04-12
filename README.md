@@ -1,4 +1,4 @@
-# 🐍 Snake
+# Snake
 
 A console-based Snake game built in C# with increasing difficulty, obstacles, and power-ups.
 
