@@ -24,9 +24,31 @@
             _isRunning = true;
         }
 
+        private void ShowStartScreen()
+        {
+            Console.Clear();
+            Console.WriteLine("== SNAKE ==");
+            Console.WriteLine();
+            Console.WriteLine("Controls:");
+            Console.WriteLine("  Arrow keys – move the snake");
+            Console.WriteLine("  Escape     – quit the game");
+            Console.WriteLine();
+            Console.WriteLine("Power-ups:");
+            Console.WriteLine("  ? = Double Points – doubles your score multiplier");
+            Console.WriteLine("  ? = Shrink        – cuts the snake's body in half");
+            Console.WriteLine("  ? = Ghost         – pass through walls temporarily");
+            Console.WriteLine();
+            Console.WriteLine("Obstacles (#) appear over time – watch out!");
+            Console.WriteLine();
+            Console.WriteLine("Press any key to start...");
+            Console.ReadKey(intercept: true);
+        }
+
         public void Run()
         {
             Console.CursorVisible = false;
+            ShowStartScreen();
+            Console.Clear();
 
             while (_isRunning)
             {
@@ -58,48 +80,28 @@
         private void Update()
         {
             var next = _snake.GetNextPosition();
+            bool ghostActive = _powerUp.IsGhostActive();
 
             // Check wall collision
-            if (!_grid.IsWithinBounds(next.x, next.y))
+            if (!ghostActive && !_grid.IsWithinBounds(next.x, next.y))
             {
                 _isRunning = false;
                 return;
             }
 
-            // Check if snake eats food
-            bool eats = next.x == _food.X && next.y == _food.Y;
-
-            _snake.Move(grow: eats);
-
-            if (eats)
-                _food.Spawn(_grid);
-
-            // Check self collision
-            if (_snake.CollidesWithSelf())
+            // Wrap around if ghost and outside bounds
+            if (ghostActive)
             {
-                _isRunning = false;
-                return;
+                next.x = (next.x + _grid.Width) % _grid.Width;
+                next.y = (next.y + _grid.Height) % _grid.Height;
             }
-
-            _score.OnTick();
-
-            // When the snake eats food:
-            if (eats)
-            {
-                _score.OnFoodEaten();
-                _food.Spawn(_grid);
-            }
-
-            _obstacles.Update(_grid);
 
             // Check obstacle collision
-            if (_obstacles.CollidesAt(next.x, next.y))
+            if (!ghostActive && _obstacles.CollidesAt(next.x, next.y))
             {
                 _isRunning = false;
                 return;
             }
-
-            _powerUp.Update(_grid);
 
             // Check if snake collects power-up
             if (_powerUp.IsActive && next.x == _powerUp.X && next.y == _powerUp.Y)
@@ -108,7 +110,27 @@
                 ApplyPowerUp();
             }
 
-            // Reset multiplier when effect runs out
+            // Check if snake eats food
+            bool eats = next.x == _food.X && next.y == _food.Y;
+            _snake.Move(grow: eats, overridePosition: next);
+
+            if (eats)
+            {
+                _score.OnFoodEaten();
+                _food.Spawn(_grid);
+            }
+
+            // Check self collision
+            if (_snake.CollidesWithSelf())
+            {
+                _isRunning = false;
+                return;
+            }
+
+            _powerUp.Update(_grid);
+            _obstacles.Update(_grid);
+            _score.OnTick();
+
             if (!_powerUp.EffectIsActive())
                 _score.ResetMultiplier();
         }
@@ -165,15 +187,22 @@
             _score.SaveScore();
             List<int> highscores = _score.LoadScores();
 
+            int place = highscores.IndexOf(_score.Score) + 1;
+
             Console.Clear();
             Console.WriteLine("== GAME OVER ==");
             Console.WriteLine($"Your score: {_score.Score}");
+
+            if (place > 0 && place <= 5)
+                Console.WriteLine($"You placed #{place} on the highscore list!");
+
             Console.WriteLine();
             Console.WriteLine("== HIGHSCORES ==");
 
             for (int i = 0; i < highscores.Count; i++)
             {
-                Console.WriteLine($"{i + 1}. {highscores[i]}");
+                string marker = (i + 1 == place) ? " <--" : "";
+                Console.WriteLine($"{i + 1}. {highscores[i]}{marker}");
             }
 
             Console.WriteLine();

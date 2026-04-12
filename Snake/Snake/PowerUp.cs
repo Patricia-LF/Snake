@@ -65,5 +65,10 @@
         {
             return _effectTicksRemaining > 0;
         }
+
+        public bool IsGhostActive()
+        {
+            return EffectIsActive() && Type == PowerUpType.Ghost;
+        }
     }
 }

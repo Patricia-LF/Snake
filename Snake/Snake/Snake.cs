@@ -33,9 +33,9 @@
             return (Head.x + _directionX, Head.y + _directionY);
         }
 
-        public void Move(bool grow)
+        public void Move(bool grow, (int x, int y)? overridePosition = null)
         {
-            var next = GetNextPosition();
+            var next = overridePosition ?? GetNextPosition();
             _body.Enqueue(next);
 
             if (!grow)
