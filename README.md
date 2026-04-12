@@ -13,7 +13,8 @@ A console-based Snake game built in C# with increasing difficulty, obstacles, an
   - **Ghost** – pass through walls and obstacles temporarily
 - Score system that rewards both survival time and eating food
 - Highscore list that saves your top 5 scores between sessions
-
+- Start screen with controls and instructions
+  
 ## Controls
 
 | Key | Action |
