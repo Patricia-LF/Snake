@@ -1,5 +1,6 @@
 ﻿namespace Snake
 {
+    // Handles scoring, multipliers, and highscore persistence
     class ScoreManager
     {
         public int Score { get; private set; }
@@ -7,11 +8,13 @@
         private int _ticksAlive = 0;
         private string _filePath = "highscores.txt";
 
+        // Adds score when food is eaten, applying multiplier
         public void OnFoodEaten()
         {
             Score += 10 * _multiplier;
         }
 
+        // Awards passive score over time for survival
         public void OnTick()
         {
             _ticksAlive++;
@@ -30,6 +33,7 @@
             _multiplier = 1;
         }
 
+        // Saves top 5 highscores to file
         public void SaveScore()
         {
             List<int> scores = LoadScores();

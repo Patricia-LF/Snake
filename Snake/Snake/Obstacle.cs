@@ -1,5 +1,6 @@
 ﻿namespace Snake
 {
+    // Manages dynamic obstacles that appear over time
     class Obstacle
     {
         private List<(int x, int y)> _obstacles = new List<(int x, int y)>();
@@ -25,7 +26,7 @@
             {
                 Spawn(grid);
                 _ticksSinceLastSpawn = 0;
-                // Gradually increase difficulty
+                // Gradually increases difficulty by spawning obstacles more frequently
                 if (_spawnInterval > 30)
                     _spawnInterval -= 5;
             }

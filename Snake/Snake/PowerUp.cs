@@ -1,5 +1,8 @@
 ﻿namespace Snake
 {
+    // Represents the different types of power-ups available in the game.
+    /* Using an enum makes the code more readable and type-safe,
+     and avoids relying on unclear numeric values ("magic numbers").*/
     enum PowerUpType
     {
         DoublePoints,
@@ -7,6 +10,7 @@
         Ghost
     }
 
+    // Handles spawning and effects of temporary power-ups
     class PowerUp
     {
         public int X { get; private set; }
@@ -61,11 +65,13 @@
             _effectTicksRemaining = 100; // Effect lasts 100 ticks
         }
 
+        // Applies effect for a limited number of ticks
         public bool EffectIsActive()
         {
             return _effectTicksRemaining > 0;
         }
 
+        // Returns true if ghost mode is currently active
         public bool IsGhostActive()
         {
             return EffectIsActive() && Type == PowerUpType.Ghost;

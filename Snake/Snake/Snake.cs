@@ -1,5 +1,6 @@
 ﻿namespace Snake
 {
+    // Represents the snake, including movement, growth, and collision logic
     class Snake
     {
         private Queue<(int x, int y)> _body;
@@ -19,9 +20,10 @@
             _directionY = 0;
         }
 
+        // Updates movement direction
+        // Prevents reversing directly into itself
         public void ChangeDirection(int dx, int dy)
         {
-            // Prevents the snake to turn right back
             if (dx == -_directionX && dy == -_directionY) return;
 
             _directionX = dx;
@@ -33,6 +35,8 @@
             return (Head.x + _directionX, Head.y + _directionY);
         }
 
+        // Moves the snake forward
+        // If 'grow' is true, the tail is not removed (snake grows)
         public void Move(bool grow, (int x, int y)? overridePosition = null)
         {
             var next = overridePosition ?? GetNextPosition();
@@ -42,6 +46,7 @@
                 _body.Dequeue(); // Remove tail if the snake doesn't grow
         }
 
+        // Checks if the snake's head overlaps with its body
         public bool CollidesWithSelf()
         {
             var body = _body.ToList();

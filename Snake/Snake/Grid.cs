@@ -1,5 +1,7 @@
 ﻿namespace Snake
 {
+    // Represents the game board as a 2D grid
+    // Each cell stores a value indicating what is rendered
     class Grid
     {
         public int Width { get; }
@@ -28,8 +30,11 @@
             _cells = new int[Width, Height];
         }
 
+        // Draws the grid to the console using different symbols for each entity
         public void Draw()
         {
+            /* Maps cell values to visual characters:
+            0 = empty, 1 = snake, 2 = food, 3 = obstacle, 4 = power-up*/
             Console.SetCursorPosition(0, 0);
 
             for (int y = 0; y < Height; y++)
